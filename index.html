@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global NO₂ Dynamics | Scientific Research</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="design.css">
+
+    <!-- ===================================================================
+         LIBRARIES — LOCAL FIRST, CDN AS FALLBACK
+         -------------------------------------------------------------------
+         Plotly.js v2.32.0 (MIT)  -> assets/js/plotly.min.js
+         PapaParse  v5.4.1 (MIT)  -> assets/js/papaparse.min.js
+         If the local copies are missing the CDN copies are used instead,
+         so HTTP/HTTPS hosting keeps working either way. Opening this file
+         through file:/// with no local copies will not be able to reach
+         the CDNs while offline — see README notes in the delivery report.
+         =================================================================== -->
+    <script src="assets/js/plotly.min.js"></script>
+    <script>
+        if (typeof Plotly === 'undefined') {
+            document.write('<script src="https://cdn.plot.ly/plotly-2.32.0.min.js"><\/script>');
+        }
+    </script>
+    <script src="assets/js/papaparse.min.js"></script>
+    <script>
+        if (typeof Papa === 'undefined') {
+            document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"><\/script>');
+        }
+    </script>
+</head>
+<body>
+
+    <canvas id="stars-canvas"></canvas>
+
+    <nav class="glass-nav">
+        <div class="logo">
+            <span class="icon">🐎</span>
+            <span class="brand-text">STEM SHARKYA RESEARCH</span>
+        </div>
+        <button id="theme-toggle" class="btn-theme">
+            <span class="theme-icon">☀️</span> Light Mode
+        </button>
+    </nav>
+
+    <header class="hero-section">
+        <div class="space-background"></div>
+
+        <div class="earth-container" id="earth-container">
+            <div class="orbit-path moon-orbit"></div>
+            <div class="orbit-path mars-orbit"></div>
+            <div class="celestial-body moon"></div>
+            <div class="celestial-body mars"></div>
+            <div class="earth"></div>
+            <div class="atmosphere"></div>
+        </div>
+
+        <div class="hero-content">
+            <p class="sys-log fade-in-up delay-1">SATELLITE TELEMETRY &amp; ATMOSPHERIC OBSERVATION</p>
+            <h1 class="hero-title fade-in-up delay-2">Global Tropospheric<br>NO₂ Dynamics</h1>
+            <p class="hero-subtitle fade-in-up delay-3">Analyzing Sentinel-5P TROPOMI satellite measurements across 12 major metropolitan regions through the COVID-19 pandemic and beyond.</p>
+        </div>
+
+        <div class="scroll-indicator fade-in-up delay-4">
+            <span class="scroll-text">EXPLORE THE RESEARCH</span>
+            <div class="scroll-line"></div>
+        </div>
+    </header>
+
+    <main class="story-container">
+        <section class="story-panel reveal">
+            <div class="glass-card editorial-layout">
+                <div class="sys-log mb-4">01 // THE THREAT</div>
+                <h2 class="editorial-heading">Why Nitrogen Dioxide Matters</h2>
+                <p class="editorial-body">Nitrogen Dioxide (NO₂) is a toxic, reddish-brown gas primarily emitted from the combustion of fossil fuels. It is a highly dangerous pollutant; the World Health Organization (WHO) lowered its annual safe guideline strictly to 10 µg/m³ in 2021.</p>
+                <p class="editorial-body">Short-term exposure causes airway inflammation and triggers asthma, while long-term exposure acts as a precursor to deadly ground-level ozone and fine particulate matter (PM2.5).</p>
+            </div>
+        </section>
+
+        <section class="story-panel reveal">
+            <div class="glass-card editorial-layout">
+                <div class="sys-log mb-4">02 // THE METHODOLOGY</div>
+                <h2 class="editorial-heading">Isolating Human Impact from Space</h2>
+                <p class="editorial-body">To measure human-driven pollution, we strictly analyze the <em>tropospheric column</em>—the lowest layer of the atmosphere. NASA algorithms must filter out the stratospheric column to prevent natural ozone chemistry from distorting the data.</p>
+                <p class="editorial-body">Our primary instrument is <strong>TROPOMI</strong> aboard the Copernicus Sentinel-5 Precursor satellite. NO₂ is an excellent tracer for human activity because it vanishes rapidly from the atmosphere.</p>
+            </div>
+        </section>
+
+        <section class="story-panel reveal">
+            <div class="glass-card editorial-layout">
+                <div class="sys-log mb-4">03 // THE DYNAMICS</div>
+                <h2 class="editorial-heading">Atmospheric &amp; Seasonal Influences</h2>
+                <p class="editorial-body">Atmospheric NO₂ is not driven solely by human lockdowns. It is heavily dictated by global seasonal mechanics. For instance, winter NO₂ columns in Beijing can be three times higher than summer due to longer NOx atmospheric lifetimes in cold weather.</p>
+                <p class="editorial-body">In Delhi, concentrations fluctuate drastically with monsoon rains, while Johannesburg sees elevated levels during dry-season biomass burning. Our 12 target regions were chosen to capture these diverse global dynamics.</p>
+            </div>
+        </section>
+
+        <section class="interactive-section reveal" id="data-portal">
+            <div class="interactive-header">
+                <h2 class="editorial-heading text-center">Live Telemetry &amp; Data Visualization</h2>
+                <p class="editorial-body text-center" style="max-width: 600px; margin: 0 auto; color: var(--text-muted);">
+                    Select regions from the global matrix to query the Sentinel-5P dataset and initialize the atmospheric density scans.
+                </p>
+            </div>
+
+            <div class="dashboard-layout">
+                <aside class="control-panel glass-card">
+                    <h3 class="panel-header">SYSTEM CONTROLS</h3>
+
+                    <div class="control-group mt-2">
+                        <label class="sys-log mb-2" style="display:block;">TARGET REGIONS</label>
+                        <div class="region-grid" id="region-grid">
+                            <button class="region-btn" data-region="Beijing">Beijing</button>
+                            <button class="region-btn" data-region="Cairo">Cairo</button>
+                            <button class="region-btn" data-region="Delhi">Delhi</button>
+                            <button class="region-btn" data-region="Johannesburg">Johannesburg</button>
+                            <button class="region-btn" data-region="London">London</button>
+                            <button class="region-btn" data-region="Madrid">Madrid</button>
+                            <button class="region-btn" data-region="Milan">Milan</button>
+                            <button class="region-btn" data-region="New York">New York</button>
+                            <button class="region-btn" data-region="São Paulo">São Paulo</button>
+                            <button class="region-btn" data-region="Seoul">Seoul</button>
+                            <button class="region-btn" data-region="Sydney">Sydney</button>
+                            <button class="region-btn" data-region="Tokyo">Tokyo</button>
+                        </div>
+                    </div>
+
+                    <div class="control-group mt-4 hidden" id="color-controls-container">
+                        <label class="sys-log mb-2" style="display:block;">GRAPH COLOR ASSIGNMENTS</label>
+                        <div id="color-controls-list" class="color-list"></div>
+                    </div>
+                </aside>
+
+                <div class="data-display glass-card" id="data-display">
+
+                    <!-- =====================================================
+                         EMPTY STATE — also hosts the offline CSV import UI
+                         ===================================================== -->
+                    <div id="empty-state" class="empty-state visible">
+                        <div class="empty-icon">🌍</div>
+                        <h3 class="editorial-heading">Awaiting Region Selection</h3>
+
+                        <p class="empty-copy">
+                            Please select one or more metropolitan regions from the control panel to query the processed TROPOMI datasets, load the interactive global map, and display longitudinal time-series data.
+                        </p>
+
+                        <!-- Silent fallback: shown ONLY if automatic CSV loading fails.
+                             Files are still identified by headers, still parsed locally,
+                             and the whole empty state accepts drag-and-drop. -->
+                        <div id="fallback-import" class="hidden">
+                            <button type="button" class="btn-file" id="csv-browse-btn">LOAD DATA FILES</button>
+                            <input type="file" id="csv-file-input" accept=".csv,text/csv" multiple hidden>
+                        </div>
+                    </div>
+
+                    <div id="data-content" class="data-content hidden">
+                        <div class="placeholder-container mb-4 position-relative">
+                            <label class="sys-log">GLOBAL ATMOSPHERIC DENSITY SCAN</label>
+
+                            <div class="map-controls-overlay glass-card" id="draggable-legend">
+                                <button type="button" class="overlay-collapse" id="overlay-collapse" aria-label="Minimize panel">−</button>
+                                <div class="drag-handle" id="drag-handle">⠿ DRAG TO MOVE</div>
+                                <label class="sys-log">OBSERVATION TIMELINE</label>
+                                <div class="slider-labels mt-2">
+                                    <span id="date-start">---</span>
+                                    <span id="date-display">---</span>
+                                </div>
+                                <input type="range" id="time-slider" min="0" max="0" value="0" class="nasa-slider mt-2" aria-label="Observation month">
+
+                                <label class="sys-log mt-4">NO₂ COLUMN DENSITY (<span id="legend-unit">mol/m²</span>)</label>
+                                <div class="seq-legend mt-2">
+                                    <div class="seq-bar" style="background: linear-gradient(to right, #46E8B9 0%, #A5E846 25%, #FFEA00 50%, #FFA500 75%, #FF0000 100%);"></div>
+                                    <div class="seq-labels">
+                                        <span id="legend-min">—</span>
+                                        <span id="legend-q1">—</span>
+                                        <span id="legend-mid">—</span>
+                                        <span id="legend-q3">—</span>
+                                        <span id="legend-max">—</span>
+                                    </div>
+                                    <div class="seq-caption">
+                                        <span>◀ LOWER NO₂</span>
+                                        <span>HIGHER NO₂ ▶</span>
+                                    </div>
+                                    <p class="seq-note">Scale fixed to the global minimum and maximum of all valid monthly observations in the dataset.</p>
+                                </div>
+                            </div>
+
+                            <div id="plot-map" class="plot-box map-box"></div>
+                        </div>
+
+                        <div id="data-warning" class="data-warning hidden" role="status"></div>
+
+                        <div class="charts-grid mb-4">
+                            <div class="placeholder-container">
+                                <label class="sys-log">LONGITUDINAL TRENDS (2018–2024)</label>
+                                <div id="plot-trend" class="plot-box chart-box"></div>
+                            </div>
+                            <div class="placeholder-container">
+                                <label class="sys-log">SEASONAL CYCLES (MONTHLY MEAN)</label>
+                                <div id="plot-seasonal" class="plot-box chart-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- =========================================================
+                 FULL-WIDTH TABLE — OUTSIDE .dashboard-layout, so it spans
+                 the sidebar + chart/map column.
+                 ========================================================= -->
+            <div id="table-content" class="hidden">
+                <div class="placeholder-container glass-card table-card">
+                    <label class="sys-log">OBSERVATION &amp; STATISTICAL SUMMARY MATRIX</label>
+                    <div class="table-responsive mt-2">
+                        <table class="scientific-table" id="data-table">
+                            <thead id="data-table-head"></thead>
+                            <tbody id="data-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="nasa-footer">
+        <div class="footer-content reveal">
+            <h2 class="editorial-heading mb-4">Project Credits &amp; Scientific References</h2>
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <strong class="sys-log blue-text">RESEARCH TEAM</strong>
+                    <p class="editorial-body" style="font-size: 1.1rem;">
+                        <strong>Sara M. Nabawy</strong><br>
+                        STEM Sharkya<br>
+                        <a href="mailto:sara.2225527@stemsharkya.moe.edu.eg">sara.2225527@stemsharkya.moe.edu.eg</a>
+                    </p>
+                    <p class="editorial-body mt-2" style="font-size: 1.1rem;">
+                        <strong>Mona E. Salem</strong><br>
+                        STEM Sharkya<br>
+                        <a href="mailto:mona.2225550@stemsharkya.moe.edu.eg">mona.2225550@stemsharkya.moe.edu.eg</a>
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <strong class="sys-log blue-text">DATA SOURCES &amp; ATTRIBUTION</strong>
+                    <ul class="editorial-body" style="font-size: 1rem; list-style-type: none; padding: 0;">
+                        <li class="mb-2"><strong>1. Copernicus Sentinel-5P:</strong> TROPOMI Level-3 Tropospheric NO₂ Data.</li>
+                        <li class="mb-2"><strong>2. NASA Earthdata:</strong> Giovanni Interface and orbital mechanics parameters.</li>
+                        <li class="mb-2"><strong>3. Google Earth Engine (GEE):</strong> Cloud-based geospatial processing.</li>
+                        <li class="mb-2"><strong>4. World Health Organization (WHO):</strong> 2021 Air Quality Guidelines.</li>
+                        <li class="mb-2"><strong>5. US EPA:</strong> Nitrogen Dioxide (NO₂) health hazard reporting.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p class="sys-log">SYS.LOG // © 2024 GLOBAL TROPOSPHERIC NO₂ DYNAMICS PROJECT. ALL RIGHTS RESERVED.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="design.js"></script>
+<script type="module" src="https://static.cloudflareinsights.com/beacon.min.js/vce701823e78c4301a35b7e07294d87301792088814092" integrity="sha512-UKNk8GbxkABxKcXYuLkO16EleLGUkcvJWtpSNmExE0Too3ZaFAxTscNWEc1OdAv5/BikHawapSCaiD2XCmp+Bw==" data-cf-beacon='{"version":"2024.11.0","token":"4edd5f8ec12a48cfa682ab8261b80a79","spa":2}' crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,452 @@
+/* =========================================
+   CINEMATIC DESIGN SYSTEM & VARIABLES
+========================================= */
+:root[data-theme="dark"] {
+    --bg-main: #080D18;
+    --bg-glass: rgba(17, 28, 45, 0.4);
+    --bg-glass-heavy: rgba(8, 13, 24, 0.7);
+    --glass-border: rgba(70, 185, 232, 0.2);
+    --accent-blue: #46B9E8;
+    --accent-orange: #F28C45;
+    --text-main: #E2E8F0;
+    --text-muted: #94A3B8;
+    --border: #243B55;
+}
+
+:root[data-theme="light"] {
+    --bg-main: #F1F4F7;
+    --bg-glass: rgba(227, 234, 240, 0.85);
+    --bg-glass-heavy: rgba(241, 244, 247, 0.95);
+    --glass-border: rgba(102, 137, 159, 0.3);
+    --accent-blue: #397FA5;
+    --accent-orange: #D98250;
+    --text-main: #233B53;
+    --text-muted: #526575;
+    --border: #DCE8ED;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    background-color: transparent;
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    transition: background-color 0.5s ease;
+    overflow-x: hidden;
+}
+
+#stars-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    z-index: -5;
+    background-color: var(--bg-main);
+    pointer-events: none;
+    transition: background-color 0.5s ease;
+}
+
+/* =========================================
+   TYPOGRAPHY
+========================================= */
+.editorial-heading {
+    font-family: "Times New Roman", Times, serif;
+    font-size: clamp(2rem, 3vw, 2.5rem);
+    font-weight: normal;
+    letter-spacing: 0.5px;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+}
+.editorial-body {
+    font-family: "Times New Roman", Times, serif;
+    font-size: clamp(1.2rem, 2vw, 1.4rem);
+    line-height: 1.8;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+}
+.editorial-body strong, .editorial-body em { color: var(--text-main); }
+.sys-log, label, .scroll-text, th {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-blue);
+}
+.blue-text { color: var(--accent-blue) !important; }
+.mb-2 { margin-bottom: 0.5rem; }
+.mb-4 { margin-bottom: 1.5rem; }
+.mt-2 { margin-top: 1rem; }
+.mt-4 { margin-top: 2rem; }
+.text-center { text-align: center; }
+.position-relative { position: relative; }
+.hidden { display: none !important; }
+
+/* =========================================
+   GLASS NAVBAR
+========================================= */
+.glass-nav {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1.5rem 3rem; background-color: transparent;
+    position: fixed; width: 100%; z-index: 100;
+    transition: background-color 0.3s, backdrop-filter 0.3s;
+}
+.glass-nav.scrolled {
+    background-color: var(--bg-glass-heavy);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--glass-border);
+}
+.logo { display: flex; align-items: center; gap: 10px; }
+.brand-text { font-family: 'IBM Plex Mono', monospace; font-size: 0.9rem; letter-spacing: 2px; }
+.btn-theme {
+    background: transparent; border: 1px solid var(--border); color: var(--text-main);
+    padding: 8px 16px; border-radius: 20px; cursor: pointer;
+    font-family: 'Inter', sans-serif; font-size: 0.8rem; transition: all 0.3s ease;
+}
+.btn-theme:hover { background: var(--bg-glass); border-color: var(--accent-blue); }
+
+/* =========================================
+   CINEMATIC HERO & 3D CELESTIAL MECHANICS
+========================================= */
+.hero-section {
+    position: relative; height: 100vh; min-height: 800px;
+    display: flex; flex-direction: column; justify-content: center; align-items: center;
+    text-align: center; overflow: hidden;
+}
+.space-background {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at center, rgba(8, 13, 24, 0.2) 0%, transparent 100%); z-index: -2;
+}
+
+.earth-container {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 800px; height: 800px; z-index: -1;
+}
+.earth {
+    width: 100%; height: 100%; border-radius: 50%; position: absolute;
+    background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/c/cd/Land_ocean_ice_2048.jpg/1024px-Land_ocean_ice_2048.jpg') repeat-x;
+    background-size: auto 100%;
+    box-shadow: inset 20px 0px 50px rgba(70, 185, 232, 0.3),
+                0 0 40px rgba(70, 185, 232, 0.2);
+    animation: rotateEarth 100s linear infinite;
+}
+.earth::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    border-radius: 50%; pointer-events: none;
+    background: linear-gradient(110deg, transparent 40%, rgba(0,0,0,0.75) 80%, rgba(0,0,0,0.95) 100%);
+}
+
+.orbit-path {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 50%;
+}
+.moon-orbit { width: 1400px; height: 1400px; animation: rotateOrbit 150s linear infinite reverse; }
+.mars-orbit { width: 2200px; height: 2200px; animation: rotateOrbit 300s linear infinite; }
+.celestial-body { position: absolute; border-radius: 50%; top: 50%; transform: translateY(-50%); }
+.moon { width: 30px; height: 30px; left: -15px; background: #C0C0C0; box-shadow: inset -5px -5px 10px rgba(0,0,0,0.8); }
+.mars { width: 20px; height: 20px; right: -10px; background: #D98250; box-shadow: inset 5px -5px 10px rgba(0,0,0,0.8); }
+
+@keyframes rotateEarth { 0% { background-position: 0 0; } 100% { background-position: -2048px 0; } }
+@keyframes rotateOrbit { 0% { transform: translate(-50%, -50%) rotate(0deg); } 100% { transform: translate(-50%, -50%) rotate(360deg); } }
+
+[data-theme="light"] .earth {
+    box-shadow: inset 20px 0px 40px rgba(102, 137, 159, 0.4), 0 0 30px rgba(102, 137, 159, 0.3);
+}
+[data-theme="light"] .earth::after {
+    background: linear-gradient(110deg, transparent 50%, rgba(0,0,0,0.15) 85%, rgba(0,0,0,0.3) 100%);
+}
+[data-theme="light"] .orbit-path { border-color: rgba(102, 137, 159, 0.15); }
+
+.hero-content { z-index: 10; max-width: 900px; padding: 2rem; }
+.hero-title {
+    font-family: "Times New Roman", Times, serif; font-size: clamp(3.5rem, 6vw, 5.5rem);
+    font-weight: normal; line-height: 1.1; margin: 1.5rem 0;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    background: linear-gradient(to bottom, #FFFFFF, #94A3B8);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+[data-theme="light"] .hero-title {
+    background: linear-gradient(to bottom, #233B53, #526575);
+    -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+    text-shadow: 0 10px 30px rgba(0,0,0,0.1);
+}
+.hero-subtitle { font-family: 'Inter', sans-serif; font-size: 1.2rem; font-weight: 300; color: var(--text-muted); max-width: 600px; margin: 0 auto; }
+.scroll-indicator { position: absolute; bottom: 40px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.scroll-line { width: 1px; height: 60px; background: linear-gradient(to bottom, var(--accent-blue), transparent); }
+
+/* =========================================
+   STORY PANELS
+========================================= */
+.story-container { padding: 4rem 2rem; max-width: 1400px; margin: 0 auto; }
+.story-panel { min-height: 60vh; display: flex; align-items: center; margin-bottom: 8rem; }
+.glass-card {
+    background: var(--bg-glass);
+    backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border); border-radius: 16px; padding: 4rem;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+}
+.editorial-layout { max-width: 800px; }
+
+/* =========================================
+   DASHBOARD
+========================================= */
+.interactive-section { margin-top: 10rem; }
+.interactive-header { margin-bottom: 4rem; }
+.dashboard-layout { display: grid; grid-template-columns: 350px 1fr; gap: 2rem; align-items: start; }
+.control-panel { padding: 2rem; }
+.panel-header { font-family: "Times New Roman", Times, serif; font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 1rem; margin-bottom: 1.5rem; }
+.region-grid { display: flex; flex-wrap: wrap; gap: 8px; }
+.region-btn {
+    background: transparent; border: 1px solid var(--border); color: var(--text-muted);
+    padding: 8px 16px; border-radius: 20px; font-family: 'Inter', sans-serif; font-size: 0.85rem;
+    cursor: pointer; transition: all 0.3s ease;
+}
+.region-btn:hover { border-color: var(--text-main); color: var(--text-main); }
+.region-btn.active { background: var(--accent-blue); border-color: var(--accent-blue); color: #fff; }
+
+.color-list { display: flex; flex-direction: column; gap: 10px; }
+.color-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.1); padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border); }
+[data-theme="light"] .color-row { background: rgba(255,255,255,0.5); }
+.color-row span { font-size: 0.9rem; }
+.color-input {
+    -webkit-appearance: none;
+    appearance: none;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    padding: 0;
+    background: transparent;
+}
+.color-input::-webkit-color-swatch-wrapper { padding: 0; }
+.color-input::-webkit-color-swatch { border: 1px solid var(--glass-border); border-radius: 50%; }
+
+.data-display { padding: 2rem; min-height: 600px; display: flex; flex-direction: column; min-width: 0; overflow: hidden; }
+
+/* --- Empty state (now also hosts the offline CSV import UI) --- */
+.empty-state { display: none; opacity: 0; }
+.empty-state.visible {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    height: 100%; min-height: 420px; text-align: center;
+    animation: fadeIn 0.5s ease forwards;
+}
+.empty-icon { font-size: 4rem; margin-bottom: 1rem; filter: grayscale(100%) opacity(0.5); }
+.empty-copy {
+    font-family: 'Inter', sans-serif; color: var(--text-muted);
+    font-size: 0.9rem; margin-top: 10px; max-width: 620px;
+}
+.data-content { display: none; opacity: 0; }
+.data-content.visible { display: block; animation: fadeIn 0.5s ease forwards; width: 100%; }
+
+/* =========================================
+   SILENT CSV FALLBACK (hidden unless needed)
+========================================= */
+#fallback-import { margin-top: 1.5rem; }
+.btn-file {
+    margin-top: 0.75rem;
+    background: transparent;
+    border: 1px solid var(--accent-blue);
+    color: var(--accent-blue);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 1.5px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+}
+.btn-file:hover { background: var(--accent-blue); color: #06131C; }
+
+/* =========================================
+   DRAGGABLE MAP OVERLAY
+========================================= */
+.map-controls-overlay {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 10;
+    padding: 1.5rem;
+    border-radius: 12px;
+    width: 280px;
+    max-width: calc(100% - 2rem);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    touch-action: none;
+}
+.map-controls-overlay.dragging { box-shadow: 0 18px 40px rgba(0,0,0,0.45); }
+.overlay-collapse {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 2;
+    width: 26px;
+    height: 26px;
+    line-height: 1;
+    border-radius: 50%;
+    border: 1px solid var(--glass-border);
+    background: rgba(0, 0, 0, 0.25);
+    color: var(--text-main);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+.overlay-collapse:hover { background: var(--accent-blue); color: #06131C; }
+/* minimized: collapses to the header bar (handle + button stay, drag still works) */
+.map-controls-overlay.collapsed .slider-labels,
+.map-controls-overlay.collapsed .nasa-slider,
+.map-controls-overlay.collapsed label,
+.map-controls-overlay.collapsed .seq-legend { display: none; }
+.map-controls-overlay.collapsed .drag-handle { margin-bottom: 0; }
+.map-controls-overlay.collapsed { width: 220px; }
+.nasa-slider { width: 100%; margin-bottom: 5px; cursor: pointer; touch-action: pan-x; }
+.slider-labels { display: flex; justify-content: space-between; font-size: 0.8rem; font-family: 'IBM Plex Mono', monospace; color: var(--text-muted); }
+.slider-labels span:last-child { color: var(--accent-blue); font-weight: 500; }
+
+.seq-legend { width: 100%; }
+.seq-bar { height: 12px; border-radius: 6px; border: 1px solid var(--border); }
+.seq-labels { display: flex; justify-content: space-between; margin-top: 5px; font-size: 0.7rem; color: var(--text-muted); font-family: 'IBM Plex Mono', monospace; }
+.seq-caption { display: flex; justify-content: space-between; margin-top: 4px; font-family: 'IBM Plex Mono', monospace; font-size: 0.62rem; letter-spacing: 1px; color: var(--text-muted); }
+.seq-note { margin-top: 6px; font-family: 'Inter', sans-serif; font-size: 0.66rem; line-height: 1.45; color: var(--text-muted); opacity: 0.85; }
+
+.placeholder-container { width: 100%; }
+.plot-box { width: 100%; background: rgba(0, 0, 0, 0.1); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+[data-theme="light"] .plot-box { background: rgba(255,255,255,0.5); }
+.map-box { height: 500px; }
+.charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; width: 100%; }
+.chart-box { height: 380px; }
+
+/* --- Data notices (coverage / unit / summary warnings) --- */
+.data-warning {
+    margin-bottom: 1.5rem;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--glass-border);
+    border-left: 3px solid var(--accent-orange);
+    border-radius: 8px;
+    background: rgba(242, 140, 69, 0.08);
+    font-family: 'Inter', sans-serif;
+    font-size: 0.8rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+}
+.data-warning strong { display: block; font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; letter-spacing: 1.5px; color: var(--accent-orange); margin-bottom: 0.4rem; }
+.data-warning ul { margin: 0; padding-left: 1.1rem; }
+.data-warning li { margin-bottom: 0.35rem; }
+.data-warning li:last-child { margin-bottom: 0; }
+
+/* =========================================
+   FULL-WIDTH DATA TABLE
+========================================= */
+#table-content { margin-top: 2rem; width: 100%; }
+.table-card { padding: 2rem; }
+
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 8px;
+    background: rgba(10, 15, 25, 0.4);
+    border: 1px solid var(--border);
+}
+[data-theme="light"] .table-responsive { background: rgba(255,255,255,0.5); }
+.scientific-table { width: 100%; min-width: 1080px; border-collapse: collapse; text-align: left; font-size: 0.9rem; }
+.scientific-table th {
+    background: rgba(0,0,0,0.2);
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: bottom;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+[data-theme="light"] .scientific-table th { background: rgba(102, 137, 159, 0.1); }
+.scientific-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.82rem;
+    white-space: nowrap;
+}
+.scientific-table tr:last-child td { border-bottom: none; }
+.scientific-table tbody tr:hover td { background: rgba(70, 185, 232, 0.06); }
+.scientific-table .region-csv { font-size: 0.66rem; color: var(--text-muted); opacity: 0.75; }
+.scientific-table .coord { color: var(--text-muted); font-size: 0.75rem; }
+.scientific-table .mis { color: var(--text-muted); opacity: 0.6; font-style: italic; }
+.scientific-table .sig { color: #FF8A8A; font-weight: 600; }
+/* units must keep their real glyphs (µ stays µ, m² stays m²) */
+.scientific-table th .unit,
+#legend-unit,
+.seq-labels span { text-transform: none; letter-spacing: 0.5px; }
+.scientific-table th .unit { font-size: 0.66rem; opacity: 0.8; }
+
+/* =========================================
+   FOOTER
+========================================= */
+.nasa-footer {
+    background: linear-gradient(135deg, #0A1128, #050914);
+    border-top: 1px solid var(--glass-border);
+    padding: 6rem 2rem 2rem; margin-top: 8rem;
+    position: relative; z-index: 10;
+}
+[data-theme="light"] .nasa-footer {
+    background: linear-gradient(135deg, #1A2C42, #0E1826);
+}
+.nasa-footer .editorial-heading, .nasa-footer .editorial-body {
+    color: #E2E8F0;
+}
+.nasa-footer .editorial-body { color: #94A3B8; }
+.footer-content { max-width: 1400px; margin: 0 auto; }
+.footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; margin-bottom: 4rem; }
+.footer-col a { color: var(--accent-blue); text-decoration: none; }
+.footer-col a:hover { text-decoration: underline; color: var(--accent-orange); }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,0.1); padding-top: 2rem; text-align: center; }
+
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.fade-in-up { opacity: 0; animation: fadeInUp 1.2s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+.delay-1 { animation-delay: 0.2s; } .delay-2 { animation-delay: 0.6s; } .delay-3 { animation-delay: 1.0s; } .delay-4 { animation-delay: 1.6s; }
+.reveal { opacity: 0; transform: translateY(50px); transition: all 1s cubic-bezier(0.2, 0.8, 0.2, 1); }
+.reveal.active { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 1200px) {
+    .charts-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 1024px) {
+    .dashboard-layout { grid-template-columns: 1fr; }
+    .footer-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 3rem; }
+    .glass-card { padding: 2.5rem; }
+    .table-card { padding: 1.5rem; }
+}
+
+@media (max-width: 640px) {
+    .glass-nav { padding: 1rem 1.25rem; }
+    .story-container { padding: 3rem 1rem; }
+    .map-controls-overlay { width: 240px; padding: 1rem; top: 0.5rem; left: 0.5rem; }
+    .map-box { height: 400px; }
+    .chart-box { height: 320px; }
+    .data-display { padding: 1.25rem; }
+    .scientific-table th, .scientific-table td { padding: 10px 12px; }
+}
+
+/* =========================================
+   DRAG HANDLE
+========================================= */
+.drag-handle {
+    width: 100%;
+    padding: 6px;
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--accent-blue);
+    text-align: center;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+    cursor: grab;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    user-select: none;
+    -webkit-user-select: none;
+    border: 1px dashed var(--glass-border);
+    touch-action: none;
+}
+.drag-handle:active { cursor: grabbing; }
